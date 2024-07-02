@@ -7,30 +7,28 @@ import br.gov.sp.fatec.domain.request.AluguelUpdateRequest;
 import br.gov.sp.fatec.domain.response.AluguelResponse;
 import br.gov.sp.fatec.repository.AluguelRepository;
 import br.gov.sp.fatec.service.AluguelService;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 @Service
+@RequiredArgsConstructor
 public class AluguelServiceImpl implements AluguelService {
 
     private final AluguelRepository aluguelRepository;
     private final AluguelMapper aluguelMapper;
 
-    @Autowired
-    public AluguelServiceImpl(AluguelRepository aluguelRepository, AluguelMapper aluguelMapper) {
-        this.aluguelRepository = aluguelRepository;
-        this.aluguelMapper = aluguelMapper;
+    @Override
+    public AluguelResponse save(AluguelRequest aluguelRequest) {
+        Aluguel aluguel =  aluguelMapper.map(aluguelRequest);
+        return aluguelMapper.map(aluguelRepository.save(aluguel));
     }
 
     @Override
-    public AluguelResponse save(AluguelRequest request) {
-        Aluguel aluguel = aluguelMapper.map(request);
-        Aluguel savedAluguel = aluguelRepository.save(aluguel);
-        return aluguelMapper.map(savedAluguel);
+    public AluguelResponse findById(Long id) {
+        Aluguel aluguel = aluguelRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return aluguelMapper.map(aluguel);
     }
 
     @Override
@@ -38,24 +36,24 @@ public class AluguelServiceImpl implements AluguelService {
         return aluguelRepository.findAll()
                 .stream()
                 .map(aluguelMapper::map)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
-    public Optional<AluguelResponse> findById(Long id) {
-        return aluguelRepository.findById(id)
-                .map(aluguelMapper::map);
+    public void updateById(Long id, AluguelUpdateRequest aluguelRequest) {
+        Aluguel aluguelToUpdate = aluguelRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        if(aluguelToUpdate == null) {
+            throw new EntityNotFoundException("Aluguel não encontrado!");
+        }
+        aluguelToUpdate.setCreatedAt(aluguelRequest.dataInicio());
+        aluguelToUpdate.setUpdatedAt(aluguelRequest.dataFim());
+        aluguelRepository.save(aluguelToUpdate);
     }
 
     @Override
     public void deleteById(Long id) {
         aluguelRepository.deleteById(id);
-    }
 
-    @Override
-    public void updateById(Long id, AluguelUpdateRequest aluguelUpdateRequest) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateById'");
     }
 }
 

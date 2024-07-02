@@ -7,12 +7,8 @@ import java.util.List;
 
 public interface ClienteService {
     ClienteResponse save(ClienteRequest clienteRequest);
-
     ClienteResponse findById(Long id);
-
     List<ClienteResponse> findAll();
-
     void updateById(Long id, ClienteUpdateRequest clienteUpdateRequest);
-
     void deleteById(Long id);
 }

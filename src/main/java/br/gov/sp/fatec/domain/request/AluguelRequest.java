@@ -1,3 +1,18 @@
 package br.gov.sp.fatec.domain.request;
 
-public record AluguelRequest() {}
+import br.gov.sp.fatec.domain.entity.Carro;
+import br.gov.sp.fatec.domain.entity.Cliente;
+import br.gov.sp.fatec.domain.enums.AluguelStatus;
+import lombok.Builder;
+
+import java.util.Date;
+
+@Builder
+public record AluguelRequest(
+        Carro carro,
+        Cliente cliente,
+        Date dataInicio,
+        Date dataFim,
+        Double valor,
+        AluguelStatus status
+) {}

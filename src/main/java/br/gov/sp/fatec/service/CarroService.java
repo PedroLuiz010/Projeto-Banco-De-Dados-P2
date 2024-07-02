@@ -7,12 +7,8 @@ import java.util.List;
 
 public interface CarroService {
     CarroResponse save(CarroRequest carroRequest);
-
     CarroResponse findById(Long id);
-
     List<CarroResponse> findAll();
-
     void updateById(Long id, CarroUpdateRequest carroUpdateRequest);
-
     void deleteById(Long id);
 }

@@ -1,3 +1,12 @@
 package br.gov.sp.fatec.domain.request;
 
-public record ClienteRequest() {}
+import lombok.Builder;
+
+@Builder
+public record ClienteRequest(
+        Long id,
+        String cpf,
+        String telefone,
+        String nome     
+) {}
+
